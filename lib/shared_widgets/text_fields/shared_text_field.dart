@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 
 class SharedTextField {
   static Widget getFields({
-    required String label,
-    required TextEditingController controller,
+    FocusNode? focusNode,
+    String? label,
+    required TextEditingController? controller,
     required String hint,
     required bool readOnly,
     required TextInputAction inputAction,
@@ -13,6 +14,7 @@ class SharedTextField {
     bool showButton = false,
     String buttonText = "",
     Function()? onButtonPressed,
+    Function(String)? onChanged,
   }
       ){
     return Padding(
@@ -20,7 +22,7 @@ class SharedTextField {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label),
+          Visibility(visible: label!=null,child: Text(label??"")),
           SizedBox(height: 10,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -29,6 +31,9 @@ class SharedTextField {
             children: [
               Flexible(
                 child: TextFormField(
+                  focusNode: focusNode,
+                  maxLines: 1,
+                  onChanged: onChanged,
                   readOnly: readOnly,
                   textInputAction: inputAction,
                   keyboardType: inputType,

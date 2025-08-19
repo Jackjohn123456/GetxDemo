@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:getxdemo/views/campaign/campaign_screen.dart' show CampaignScreen;
+import 'package:getxdemo/views/campaign/campaign_view.dart' show CampaignView;
 import 'package:getxdemo/views/dashboard/dashboard_screen.dart' show DashboardScreen;
 import 'package:getxdemo/views/personl_info/basic_info.dart' show BasicInfo;
 import 'package:getxdemo/views/personl_info/credentials.dart' show Credentials;
@@ -14,5 +15,6 @@ class RouteConfig {
     GetPage(name: "/personalInfo", page: () => PersonalInfoScreen(),),
     GetPage(name: "/basicInfo", page: () => BasicInfo(),),
     GetPage(name: "/credentials", page: () => Credentials(),),
+    GetPage(name: "/view_campaign", page: () => CampaignView(campaign:Get.arguments),),
   ];
 }

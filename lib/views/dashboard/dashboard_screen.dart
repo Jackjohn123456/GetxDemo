@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getxdemo/shared_widgets/tiles/shared_tiles.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+  DashboardScreen({super.key});
+  File? _image;
 
   @override
   Widget build(BuildContext context) {
@@ -74,14 +79,50 @@ class DashboardScreen extends StatelessWidget {
             ],
           ),
         ),
-        CircleAvatar(
-          radius: 40,
-          backgroundImage: NetworkImage(
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoFRQjM-wM_nXMA03AGDXgJK3VeX7vtD3ctA&s',
-          ),
-        ),
+        StatefulBuilder(builder: (context, setState) {
+          return  InkWell(
+            onTap: () async {
+              await _handleImagePick(setState);
+            },
+            child: Stack(
+              clipBehavior: Clip.hardEdge,
+              children: [
+                CircleAvatar(
+                  radius: 40,
+                  backgroundImage: (_image!=null)?FileImage(_image!):NetworkImage(
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoFRQjM-wM_nXMA03AGDXgJK3VeX7vtD3ctA&s',
+                  ),
+                ),
+                Positioned(
+                  bottom: -15,
+                  right: -10,
+                    child:Visibility(visible: _image!=null,child: IconButton(onPressed:() => setState(() => _image=null,), icon: Icon(Icons.delete_outline_outlined,color: Color.fromARGB(255, 68, 13, 126),)),)
+                )
+              ],
+            ),
+          );
+        },),
       ],
     );
+  }
+
+  _handleImagePick(StateSetter setState) async {
+    final status = await Permission.photos.request();
+    if(status.isGranted){
+      final picker = ImagePicker();
+      final picked = await picker.pickImage(source: ImageSource.gallery);
+      if(picked!=null){
+        setState(() {
+          _image = File(picked.path);
+        },);
+      }
+    }
+    else if(status.isDenied){
+      _handleImagePick(setState);
+    }
+    else if(status.isPermanentlyDenied){
+      Get.snackbar("Permission permanently denied", "Please change from settings");
+    }
   }
 
   List<Widget> _getCategoryCountSection({

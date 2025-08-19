@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:getxdemo/controllers/campaign/user_controller.dart';
+import 'package:getxdemo/models/user.dart';
 import 'package:getxdemo/shared_widgets/appbar/shared_app_bar.dart';
 import 'package:getxdemo/shared_widgets/buttons/shared_buttons.dart';
+import 'package:getxdemo/shared_widgets/loader/shared_loader.dart';
 import 'package:getxdemo/shared_widgets/text_fields/shared_text_field.dart';
 
 class BasicInfo extends StatelessWidget {
   BasicInfo({super.key});
+  final UserController _userController = Get.find<UserController>();
   final TextEditingController _idController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -15,6 +21,7 @@ class BasicInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _idController.text = _userController.user!.id;
     return Scaffold(
       appBar: SharedAppBar.getAppBar(),
       body: SafeArea(
@@ -24,12 +31,12 @@ class BasicInfo extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Text("Basic Information",style: TextStyle(fontSize: 24),),
+              child: Text("Basic Information", style: TextStyle(fontSize: 24)),
             ),
             SharedTextField.getFields(
               label: "ID",
               controller: _idController,
-              hint: _idController.text.isNotEmpty?_idController.text:"id",
+              hint: _idController.text.isNotEmpty ? _idController.text : "id",
               readOnly: true,
               inputAction: TextInputAction.next,
               inputType: TextInputType.name,
@@ -37,7 +44,7 @@ class BasicInfo extends StatelessWidget {
             SharedTextField.getFields(
               label: "Email",
               controller: _emailController,
-              hint: _emailController.text.isNotEmpty?"":"email",
+              hint: _emailController.text.isNotEmpty ? "" : "email",
               readOnly: false,
               inputAction: TextInputAction.next,
               inputType: TextInputType.emailAddress,
@@ -46,10 +53,9 @@ class BasicInfo extends StatelessWidget {
               label: "Phone",
               showButton: true,
               buttonText: "Change",
-              onButtonPressed: () {
-              },
+              onButtonPressed: () {},
               controller: _phoneController,
-              hint:_phoneController.text.isNotEmpty?"":"phone",
+              hint: _phoneController.text.isNotEmpty ? "" : "phone",
               readOnly: false,
               inputAction: TextInputAction.next,
               inputType: TextInputType.phone,
@@ -57,7 +63,7 @@ class BasicInfo extends StatelessWidget {
             SharedTextField.getFields(
               label: "Nick Name",
               controller: _nickNameController,
-              hint: _nickNameController.text.isNotEmpty?"":"nick name",
+              hint: _nickNameController.text.isNotEmpty ? "" : "nick name",
               readOnly: false,
               inputAction: TextInputAction.next,
               inputType: TextInputType.name,
@@ -65,33 +71,45 @@ class BasicInfo extends StatelessWidget {
             SharedTextField.getFields(
               label: "Instagram",
               controller: _instaIdController,
-              hint: _instaIdController.text.isNotEmpty?"":"instagram",
+              hint: _instaIdController.text.isNotEmpty ? "" : "instagram",
               readOnly: false,
               inputAction: TextInputAction.next,
               inputType: TextInputType.text,
-
             ),
             SharedTextField.getFields(
               label: "Representative Work Link",
               controller: _workLinkController,
-              hint:_workLinkController.text.isNotEmpty?"":"projects",
+              hint: _workLinkController.text.isNotEmpty ? "" : "projects",
               readOnly: false,
               inputAction: TextInputAction.next,
               inputType: TextInputType.text,
-
             ),
             SharedTextField.getFields(
               label: "PortFolio",
               controller: _portfolioController,
-              hint: _phoneController.text.isNotEmpty?"":"portfolio",
+              hint: _phoneController.text.isNotEmpty ? "" : "portfolio",
               readOnly: false,
               inputAction: TextInputAction.next,
               inputType: TextInputType.text,
               suffixIcon: "assets/icons/attachments.png",
             ),
-            SharedButtons.saveButton(onPressed: () {
-
-            },)
+            SharedButtons.saveButton(
+              onPressed: () async {
+                SharedLoader.showLoader();
+                await _userController.updateUser(
+                  User(
+                    id: _userController.user!.id,
+                    phone: _phoneController.text,
+                    email: _emailController.text,
+                    instaId: _instaIdController.text,
+                    nickName: _nickNameController.text,
+                    portfolio: _portfolioController.text,
+                    workLink: _workLinkController.text,
+                  ),
+                );
+                SharedLoader.hideLoader();
+              },
+            ),
           ],
         ),
       ),
