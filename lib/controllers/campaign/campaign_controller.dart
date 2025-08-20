@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:get/get.dart';
 import 'package:getxdemo/db/api_client/api_client.dart';
 import 'package:getxdemo/models/campaign.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CampaignController extends GetxController {
   var campaignList = <Campaign>[].obs;

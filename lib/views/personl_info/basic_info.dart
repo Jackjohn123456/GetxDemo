@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:getxdemo/controllers/campaign/user_controller.dart';
 import 'package:getxdemo/models/user.dart';
 import 'package:getxdemo/shared_widgets/appbar/shared_app_bar.dart';
@@ -22,6 +21,12 @@ class BasicInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _idController.text = _userController.user!.id;
+    _emailController.text = _userController.user!.email;
+    _phoneController.text = _userController.user!.phone;
+    _nickNameController.text = _userController.user!.nickName;
+    _instaIdController.text = _userController.user!.instaId;
+    _workLinkController.text = _userController.user!.workLink;
+    _portfolioController.text = _userController.user!.portfolio;
     return Scaffold(
       appBar: SharedAppBar.getAppBar(),
       body: SafeArea(

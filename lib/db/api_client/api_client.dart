@@ -53,11 +53,13 @@ class ApiClient {
 
   Future<User?> getUser() async {
     try{
+      debugPrint("Populating User:::::::::::::::::::");
       final url = Uri.parse(UrlConfig.getUserUrl);
       final res = await apiClient.get(url);
       if(res.statusCode==200){
         final listOfJson = jsonDecode(res.body) as List;
         if(listOfJson.isEmpty) return null;
+        debugPrint("User Populated:::::::::::::::::::");
         return User.fromJson(listOfJson.first);
       }
       else{
@@ -72,13 +74,14 @@ class ApiClient {
 
   Future<void> updateUser(User user) async {
     try{
-      debugPrint("Updating Campaign:::::::::::::::::::");
-      final url = Uri.parse("${UrlConfig.getCampaignUrl}/${user.id}");
+      debugPrint("Updating User:::::::::::::::::::");
+      final url = Uri.parse("${UrlConfig.getUserUrl}/${user.id}");
       debugPrint(url.path);
       final json = jsonEncode(user.toJson());
       final res = await http.put(url,headers:{"Content-Type": "application/json"},body: json);
       if(res.statusCode==200){
         debugPrint(jsonDecode(res.body).toString());
+        debugPrint("Updated User:::::::::::::::::::");
       }
       else{
         debugPrint("status Code : ${res.statusCode}");
